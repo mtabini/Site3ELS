@@ -21,7 +21,7 @@ struct {
 
   pin_size_t StepperDirectionPin              =      21;
   pin_size_t StepperPulsePin                  =      20;
-  float      StepperStepsPerRevolution        =    10000;   // 8000 steps per revolution
+  float      StepperStepsPerRevolution        =   20000;   // 20000 steps per revolution
 
   // Display setup
 
