@@ -54,6 +54,9 @@ Display display({
   tachometer,
   Config.DisplayBanner,
   Config.DisplayUpdateInterval,
+  Config.DisplayLoopInterval,
+  Config.DisplayButtonQueueSize,
+  Config.DisplayAutoOffInterval,
 });
 
 SerialDebug serialDebug({
@@ -74,6 +77,7 @@ void setup() {
   stepper.begin();
   tachometer.begin();
   display.begin();
+  // Serial.begin(115200);
   // serialDebug.begin();
 }
 

@@ -42,6 +42,9 @@ struct {
 
   bool       DisplayBanner                    =    true;   // Display banner on startup
   uint32_t   DisplayUpdateInterval            =     100;   // Update interval in milliseconds
+  uint32_t   DisplayLoopInterval              =      50;   // Loop interval in milliseconds
+  uint32_t   DisplayAutoOffInterval           =     600;   // Auto-off interval in seconds
+  size_t     DisplayButtonQueueSize           =       3;   // Number of times the button input from the display board must be the same to be considered a valid press
   
   // Lead screw setup
 

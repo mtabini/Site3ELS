@@ -29,10 +29,14 @@ void Display::begin() {
   powerFeedIPR(_setup.defaultIPR);
   mode(TPI);
 
-  add_repeating_timer_ms(10, _displayTimerCallback, this, &_timer);
+  add_repeating_timer_ms(_setup.displayLoopIntervalMs, _displayTimerCallback, this, &_timer);
 }
 
 void Display::_updateIndicators() {
+  if (_sleeping) {
+    return;
+  }
+
   uint8_t indicators = 0;
 
   switch(_mode) {
@@ -85,6 +89,20 @@ void Display::_updateIndicators() {
   }
 
   _display.setLEDs(indicators);
+
+  if (speed == 0) {
+    if (!_idle) {
+      _idle = true;
+      _idleStartTime = get_absolute_time();
+    } else if (absolute_time_diff_us(_idleStartTime, get_absolute_time()) > _setup.displayAutoOffInterval * 1000000) {
+      _display.setLEDs(0);
+      _display.setDisplayToString("SLEEPING");
+      _sleeping = true;
+      _leadscrew.engage(false);
+    }
+  } else {
+    _idle = false;
+  }
 }
 
 void Display::_readButtons() {
@@ -92,8 +110,34 @@ void Display::_readButtons() {
 
   uint32_t buttons = _display.getButtons();
 
+  _buttonPressQueue.push_front(buttons);
+
+  if (_buttonPressQueue.size() > _setup.displayButtonQueueSize) {
+    _buttonPressQueue.pop_back();
+  } else if (_buttonPressQueue.size() < _setup.displayButtonQueueSize) {
+    return;
+  }
+
+  // Only proceed if all the button press values
+  // in the queue are the same
+
+  for (auto it = _buttonPressQueue.begin(); it != _buttonPressQueue.end(); it++) {
+    if (*it != buttons) {
+      return;
+    }
+  }
+
+  _buttonPressQueue.clear();
+
   if (!buttons) {
     _lastButtonPress = 0;
+  } else {
+    if (_sleeping) {
+      watchdog_reboot(0, 0, 0);
+      while(1);
+    }
+
+    _idle = false;
   }
 
   if (absolute_time_diff_us(_lastButtonPress, now) > 250000) { // 250ms repeat rate

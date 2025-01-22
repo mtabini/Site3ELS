@@ -68,6 +68,10 @@ typedef struct {
 
   bool displayBanner;
   uint32_t displayUpdateIntervalMs;
+  uint32_t displayLoopIntervalMs;
+  size_t displayButtonQueueSize;
+
+  uint32_t displayAutoOffInterval;
 } DisplaySetup;
 
 
@@ -123,6 +127,10 @@ class Display {
 
     uint32_t lastDisplayUpdateUs = 0;
 
+    bool _sleeping = false;
+    bool _idle = false;
+    uint32_t _idleStartTime = 0;
+
     DisplayMode _mode;
 
     int _tpiIndex;
@@ -131,6 +139,8 @@ class Display {
     float _tpiThread;
     float _metricThread;
     float _powerFeedIPR;
+
+    std::deque<uint32_t> _buttonPressQueue;
 
     absolute_time_t _lastButtonPress = 0;
 
