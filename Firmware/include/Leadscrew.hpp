@@ -10,7 +10,7 @@ struct LeadscrewSetup {
   Encoder &encoder;
 
   uint8_t leadscrewPitch;             // Pitch of the leadscrew in TPI
-  uint8_t leadScrewReductionFactor;   // Reduction factor of the leadscrew
+  uint16_t leadScrewReductionFactor;   // Reduction factor of the leadscrew
 };
 
 

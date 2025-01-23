@@ -61,7 +61,7 @@ void Leadscrew::powerFeedIPR(float feedRate) {
   // stepper res / encoder res             // multiplied by the ratio of steps per revolution of the encoder to the steps per revolution of the stepper
 
   float spindleToLeadScrewRatio = feedRate * _setup.leadscrewPitch *
-                                  _setup.leadScrewReductionFactor * 
+                                  _setup.leadScrewReductionFactor / 100 * 
                                   _stepper.stepsPerRevolution() / _encoder.stepsPerRevolution();
 
   _state.spindleToLeadScrewRatio = spindleToLeadScrewRatio;
@@ -78,7 +78,7 @@ float Leadscrew::powerFeedIPR() {
   // steps per revolution of the stepper.
 
   return _state.spindleToLeadScrewRatio * _encoder.stepsPerRevolution() / 
-          (_setup.leadscrewPitch * _setup.leadScrewReductionFactor * _stepper.stepsPerRevolution());
+          (_setup.leadscrewPitch * _setup.leadScrewReductionFactor / 100 * _stepper.stepsPerRevolution());
 }
 
 void Leadscrew::threadTPI(uint8_t tpi) {
@@ -94,7 +94,7 @@ void Leadscrew::threadTPI(uint8_t tpi) {
   // stepper res / encoder res              // multiplied by the ratio of steps per revolution of the encoder to the steps per revolution of the stepper
 
   float spindleToLeadScrewRatio = _setup.leadscrewPitch / float(tpi) *
-                                  _setup.leadScrewReductionFactor * 
+                                  _setup.leadScrewReductionFactor / 100 * 
                                   _stepper.stepsPerRevolution() / _encoder.stepsPerRevolution();
 
   _state.spindleToLeadScrewRatio = spindleToLeadScrewRatio;
@@ -110,7 +110,7 @@ float Leadscrew::threadTPI() {
   // and the ratio of steps per revolution of the encoder to the
   // steps per revolution of the stepper.
 
-  return _setup.leadscrewPitch * _setup.leadScrewReductionFactor * _stepper.stepsPerRevolution() / 
+  return _setup.leadscrewPitch * _setup.leadScrewReductionFactor / 100 * _stepper.stepsPerRevolution() / 
         (_state.spindleToLeadScrewRatio * _encoder.stepsPerRevolution());
 }
 
@@ -122,7 +122,7 @@ void Leadscrew::threadMetric(float pitch) {
 
   const float tpi = 25.4 / pitch;
   const float ratio = _setup.leadscrewPitch / tpi;
-  const float reducedRatio = ratio * _setup.leadScrewReductionFactor;
+  const float reducedRatio = ratio * _setup.leadScrewReductionFactor / 100;
   const float spindleToLeadScrewRatio = reducedRatio * _stepper.stepsPerRevolution() / _encoder.stepsPerRevolution();
 
   _state.spindleToLeadScrewRatio = spindleToLeadScrewRatio;
@@ -138,7 +138,7 @@ float Leadscrew::threadMetric() {
   // and the ratio of steps per revolution of the encoder to the
   // steps per revolution of the stepper.
 
-  const float tpi = _setup.leadscrewPitch * _setup.leadScrewReductionFactor * _stepper.stepsPerRevolution() / 
+  const float tpi = _setup.leadscrewPitch * _setup.leadScrewReductionFactor / 100 * _stepper.stepsPerRevolution() / 
                     (_state.spindleToLeadScrewRatio * _encoder.stepsPerRevolution());
 
   return 25.4 / tpi;
