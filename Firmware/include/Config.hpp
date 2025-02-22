@@ -19,8 +19,8 @@ struct {
 
   // Stepper setup
 
-  pin_size_t StepperDirectionPin              =      21;
-  pin_size_t StepperPulsePin                  =      20;
+  pin_size_t StepperDirectionPin              =      22;
+  pin_size_t StepperPulsePin                  =      21;
   float      StepperStepsPerRevolution        =    2400;   // 2,400 steps per revolution
 
   // Display setup
@@ -49,7 +49,7 @@ struct {
   // Lead screw setup
 
   uint8_t    LeadScrewPitch                   =       8;   // 8 TPI
-  uint16_t    LeadScrewReductionFactor        =     275;   // 2.75:1 reduction factor from the stepper motor to the lead screw
+  uint16_t   LeadScrewReductionFactor         =     275;   // 2.75:1 reduction factor from the stepper motor to the lead screw
 
   // Serial debug setup
 

@@ -78,10 +78,11 @@ void Display::_updateIndicators() {
   }
 
   uint32_t speed = _tachometer.speed();
+  uint32_t speedDisplay = speed;
 
   for (int i = 7; i >= 4; i--) {
-    _display.setDisplayDigit(speed % 10, i, false);
-    speed /= 10;
+    _display.setDisplayDigit(speedDisplay % 10, i, false);
+    speedDisplay /= 10;
   }
 
   if (_leadscrew.engaged()) {
